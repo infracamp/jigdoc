@@ -1,4 +1,4 @@
 
 Commands:
   update        Update the repositories (clone / pull)
-
+  build         Parse the files and save them to output dir

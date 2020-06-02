@@ -5,46 +5,75 @@ namespace JigDoc\Cli\Cmd;
 
 
 use JigDoc\Config\Config;
+use JigDoc\Parser\Template;
+use Leuffen\TextTemplate\TextTemplate;
 use Phore\Core\Exception\InvalidDataException;
+use Phore\FileSystem\PhoreUri;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
-class CloneCmd
+class BuildCmd
 {
     /**
      * @var Config
      */
     private $config;
 
-    public function __construct(Config $config)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var TextTemplate
+     */
+    private $template;
+
+    public function __construct(Config $config, LoggerInterface $logger)
     {
         $this->config = $config;
+        $this->logger = $logger;
+        $this->template = new Template();
     }
 
 
-    private function cloneRepo($repo) {
-        if (preg_match ("/^git@([a-z0-9.-]+):(.*)$/", $repo, $matches)) {
-            $repoName = phore_uri($matches[2])->getFilename();
-            $httpsCloneUrl = "https://{$matches[1]}/{$matches[2]}";
-            $gitCloneUrl = $repo;
-        } else {
-            throw new InvalidDataException("Invalid repository: '$repo'");
-        }
 
-        $path = phore_dir($this->config->data["repo_dir"] . "/" . $repoName);
-
-
-        if ($path->isDirectory()) {
-            phore_exec("git -C ? pull", [$path]);
-        } else {
-            phore_exec("git clone ? ?", [$httpsCloneUrl, (string)$path]);
-            phore_exec("git -C ? remote set-url --add --push origin ?", [$path, $gitCloneUrl]);
-        }
-    }
-
-
-    public function cloneAll()
+    public function applyLayout($input, $layout)
     {
-        foreach ($this->config->data["repos"] as $repo) {
-            $this->cloneRepo($repo);
+        $tpl = phore_file("_layout/" . $layout);
+        $p = clone ($this->template);
+        $p->loadTemplate($tpl->get_contents());
+        return $p->apply(["content" => $input]);
+    }
+
+
+
+    public function parseFile(PhoreUri $filename)
+    {
+        $outfile = "out/" . $filename;
+        $inFile = $filename->asFile();
+
+        $tpl = clone ($this->template);
+
+        $this->logger->notice("Parsing '$inFile' -> '$outfile'...");
+        $parsed = $tpl->parse($inFile);
+
+        if ($tpl->layout !== null) {
+            $pd = new \Parsedown();
+            $parsed = $this->applyLayout($pd->parse($parsed), $tpl->layout);
+            phore_file($outfile)->mkdir()->set_contents($parsed);
+        }
+        // Ignore other files
+
+    }
+
+    public function parseAll() {
+        foreach (phore_dir(".")->genWalk() as $uri) {
+            if ( ! $uri->fnmatch("*.md"))
+                continue;
+            if ( ! $uri->isFile())
+                continue;
+            $this->parseFile($uri);
         }
     }
 }

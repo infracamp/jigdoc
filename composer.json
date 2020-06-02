@@ -11,7 +11,9 @@
     "ext-json": "*",
     "phore/cli-tools": "dev-master",
     "phore/filesystem": "dev-master",
-    "phore/system": "dev-master"
+    "phore/system": "dev-master",
+    "text/template": "dev-master",
+    "erusev/parsedown-extra": "dev-master"
   },
   "autoload": {
     "psr-4": {

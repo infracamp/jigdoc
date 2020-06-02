@@ -4,6 +4,7 @@
 namespace JigDoc\Cli;
 
 
+use JigDoc\Cli\Cmd\BuildCmd;
 use JigDoc\Cli\Cmd\CloneCmd;
 use JigDoc\Config\Config;
 use Phore\CliTools\Helper\GetOptResult;
@@ -27,6 +28,10 @@ class JigDocCli extends PhoreAbstractCli
                 $c->cloneAll();
                 break;
 
+            case "build":
+                $c = new BuildCmd($config, $this->log);
+                $c->parseAll();
+                break;
 
 
         }
