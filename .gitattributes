@@ -1,0 +1,17 @@
+
+
+
+# Declare files that will always have CRLF line endings on checkout.
+* text eol=lf
+
+
+# Binary must be declared to prevent default eol=lf to be applied (Causes segfault)
+ilog_conversion_tool binary
+
+
+*.jpg binary
+*.png binary
+*.pdf binary
+*.woff binary
+*.zip binary
+*.gz binary

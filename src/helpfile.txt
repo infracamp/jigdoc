@@ -1,0 +1,4 @@
+
+Commands:
+  update        Update the repositories (clone / pull)
+

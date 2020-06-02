@@ -1,0 +1,24 @@
+{
+  "name": "infracamp/jigdoc",
+  "description": "Static website creator for distributed content",
+  "keywords": ["Keyword1", "Keyword2"],
+  "license": "MIT",
+  "authors": [
+    { "name": "Matthias Leuffen", "email": "m@tth.es" }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "ext-json": "*",
+    "phore/cli-tools": "dev-master",
+    "phore/filesystem": "dev-master",
+    "phore/system": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "JigDoc\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "require-dev": {
+  }
+}
