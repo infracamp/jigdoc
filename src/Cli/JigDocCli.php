@@ -12,6 +12,10 @@ use Phore\CliTools\PhoreAbstractCli;
 
 class JigDocCli extends PhoreAbstractCli
 {
+    public function __construct()
+    {
+        parent::__construct("JigDoc", __DIR__ . "/../src/helpfile.txt", "h");
+    }
 
     protected function main(array $argv, int $argc, GetOptResult $opts)
     {

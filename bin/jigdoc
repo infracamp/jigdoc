@@ -10,7 +10,7 @@ if (file_exists(__DIR__ . "/../vendor/autoload.php")) {
 /**
  * Adjust this to your CliClass
  */
-$i = new \JigDoc\Cli\JigDocCli("JigDoc", __DIR__ . "/../src/helpfile.txt", "h");
+$i = new \JigDoc\Cli\JigDocCli();
 $i->run();
 
 
