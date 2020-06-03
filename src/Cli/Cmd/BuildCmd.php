@@ -50,7 +50,7 @@ class BuildCmd
 
     public function parseFile(PhoreUri $filename)
     {
-        $outfile = "out/" . $filename;
+        $outfile = "{$this->config->data["out_dir"]}/$filename";
         $inFile = $filename->asFile();
 
         $tpl = clone ($this->template);
@@ -72,6 +72,8 @@ class BuildCmd
             if ( ! $uri->fnmatch("*.md"))
                 continue;
             if ( ! $uri->isFile())
+                continue;
+            if ($uri->isSubpathOf($this->config->data["out_dir"]))
                 continue;
             $this->parseFile($uri);
         }

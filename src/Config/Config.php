@@ -11,6 +11,7 @@ class Config
 
     public $data = [
         "repo_dir" => "jigdoc_repos",
+        "out_dir" => "docs",
         "repos" => []
     ];
 

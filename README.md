@@ -22,3 +22,10 @@
 
 <!-- /jd_section -->
 ```
+
+
+### Define a page
+
+```
+<!--jigdoc layout="default.html" -->
+```
