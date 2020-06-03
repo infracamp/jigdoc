@@ -58,7 +58,13 @@ class BuildCmd
 
     public function parseFile(PhoreUri $filename)
     {
-        $outfile = $this->env->workDir->join($this->config->out_dir, $filename);
+        $relFileName = $filename->rel($this->env->workDir)->asFile();
+
+
+        $outfile = $this->env->workDir->join($this->config->out_dir, $relFileName);
+        if ($outfile->getExtension() === "md")
+            $outfile = $outfile->getDirname()->withFileName($outfile->getFilename(), "html");
+
         $inFile = $filename->asFile();
 
         $tpl = clone ($this->template);
@@ -81,7 +87,7 @@ class BuildCmd
                 continue;
             if ( ! $uri->isFile())
                 continue;
-            if ($uri->isSubpathOf($this->config->data["out_dir"]))
+            if ($uri->isSubpathOf($this->env->outDir))
                 continue;
             $this->parseFile($uri);
         }

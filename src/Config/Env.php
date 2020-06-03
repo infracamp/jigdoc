@@ -52,5 +52,7 @@ class Env
 
     public function parseConfig() {
         $this->config = new Config($this->configFile);
+
+        $this->outDir = $this->workDir->join($this->config->out_dir);
     }
 }

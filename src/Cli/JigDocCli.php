@@ -15,7 +15,7 @@ class JigDocCli extends PhoreAbstractCli
 {
     public function __construct()
     {
-        parent::__construct("JigDoc", __DIR__ . "/../src/helpfile.txt", "hC:");
+        parent::__construct("JigDoc", __DIR__ . "/../helpfile.txt", "hC:");
     }
 
     protected function main(array $argv, int $argc, GetOptResult $opts)
