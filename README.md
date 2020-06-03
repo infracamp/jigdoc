@@ -29,3 +29,7 @@
 ```
 <!--jigdoc layout="default.html" -->
 ```
+
+### Define a layout
+
+Layouts reside in directory `_layout`
