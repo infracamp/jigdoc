@@ -51,6 +51,7 @@ class BuildCmd
         $tpl = $this->env->layoutDir->join($layout)->asFile();
         $p = clone ($this->template);
         $p->loadTemplate($tpl->get_contents());
+        $p->fileName = $tpl;
         return $p->apply(["content" => $input]);
     }
 

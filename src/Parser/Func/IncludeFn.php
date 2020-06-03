@@ -19,6 +19,7 @@ class IncludeFn
         if ( ! $path->isFile())
             throw new FileNotFoundException("Include file '$path' not found. (Referenced by '{$template->fileName}')");
         $tpl = clone $template;
+        $tpl->fileName = $path;
         return $tpl->parse($path);
 
 
