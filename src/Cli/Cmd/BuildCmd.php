@@ -5,6 +5,7 @@ namespace JigDoc\Cli\Cmd;
 
 
 use JigDoc\Config\Config;
+use JigDoc\Config\Env;
 use JigDoc\Parser\Template;
 use Leuffen\TextTemplate\TextTemplate;
 use Phore\Core\Exception\InvalidDataException;
@@ -14,6 +15,12 @@ use Psr\Log\LoggerInterface;
 
 class BuildCmd
 {
+
+    /**
+     * @var Env
+     */
+    private $env;
+
     /**
      * @var Config
      */
@@ -29,9 +36,10 @@ class BuildCmd
      */
     private $template;
 
-    public function __construct(Config $config, LoggerInterface $logger)
+    public function __construct(Env $env, LoggerInterface $logger)
     {
-        $this->config = $config;
+        $this->env = $env;
+        $this->config = $env->config;
         $this->logger = $logger;
         $this->template = new Template();
     }
@@ -40,7 +48,7 @@ class BuildCmd
 
     public function applyLayout($input, $layout)
     {
-        $tpl = phore_file("_layout/" . $layout);
+        $tpl = $this->env->layoutDir->join($layout)->asFile();
         $p = clone ($this->template);
         $p->loadTemplate($tpl->get_contents());
         return $p->apply(["content" => $input]);
@@ -50,7 +58,7 @@ class BuildCmd
 
     public function parseFile(PhoreUri $filename)
     {
-        $outfile = "{$this->config->data["out_dir"]}/$filename";
+        $outfile = $this->env->workDir->join($this->config->out_dir, $filename);
         $inFile = $filename->asFile();
 
         $tpl = clone ($this->template);
@@ -68,7 +76,7 @@ class BuildCmd
     }
 
     public function parseAll() {
-        foreach (phore_dir(".")->genWalk() as $uri) {
+        foreach ($this->env->workDir->genWalk() as $uri) {
             if ( ! $uri->fnmatch("*.md"))
                 continue;
             if ( ! $uri->isFile())

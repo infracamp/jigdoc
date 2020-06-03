@@ -5,6 +5,7 @@ namespace JigDoc\Cli\Cmd;
 
 
 use JigDoc\Config\Config;
+use JigDoc\Config\Env;
 use Phore\Core\Exception\InvalidDataException;
 
 class CloneCmd
@@ -14,9 +15,15 @@ class CloneCmd
      */
     private $config;
 
-    public function __construct(Config $config)
+    /**
+     * @var Env
+     */
+    private $env;
+
+    public function __construct(Env $env)
     {
-        $this->config = $config;
+        $this->env = $env;
+        $this->config = $env->config;
     }
 
 
@@ -29,7 +36,7 @@ class CloneCmd
             throw new InvalidDataException("Invalid repository: '$repo'");
         }
 
-        $path = phore_dir($this->config->data["repo_dir"] . "/" . $repoName);
+        $path = $this->env->workDir->join($this->config->repo_dir, $repoName);
 
 
         if ($path->isDirectory()) {
@@ -43,7 +50,7 @@ class CloneCmd
 
     public function cloneAll()
     {
-        foreach ($this->config->data["repos"] as $repo) {
+        foreach ($this->config->repos as $repo) {
             $this->cloneRepo($repo);
         }
     }

@@ -4,21 +4,44 @@
 namespace JigDoc\Config;
 
 
+use Phore\Core\Exception\InvalidDataException;
+use Phore\FileSystem\PhoreDirectory;
+use Phore\FileSystem\PhoreFile;
+
 class Config
 {
 
-    public $path = "";
+    /**
+     * The subdirectory jigdoc stores foreign repositories
+     *
+     * @var string
+     */
+    public $repo_dir = "jigdoc_repos";
 
-    public $data = [
-        "repo_dir" => "jigdoc_repos",
-        "out_dir" => "docs",
-        "repos" => []
-    ];
+    /**
+     * Directory where the output should go
+     *
+     * @var string
+     */
+    public $out_dir = "docs";
+
+    /**
+     * List of repos to clone
+     *
+     * @var array
+     */
+    public $repos = [];
 
 
-    public function __construct($filename="jigdoc.yml")
+
+    public function __construct(PhoreFile $configFile)
     {
-        $this->data = array_merge($this->data, phore_file($filename)->get_yaml());
+        foreach ($configFile->get_yaml() as $key => $value) {
+            if ( ! isset($this->$key)) {
+                throw new InvalidDataException("Unknown section '$key' in '$configFile'");
+            }
+            $this->$key = $value;
+        }
 
     }
 

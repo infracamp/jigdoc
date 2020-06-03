@@ -1,3 +1,5 @@
+Parameters
+  -C <workDir>  The workdir to search for jigdoc.yml in
 
 Commands:
   update        Update the repositories (clone / pull)
