@@ -15,6 +15,9 @@
     "text/template": "dev-master",
     "erusev/parsedown-extra": "dev-master"
   },
+  "bin": [
+    "bin/jigdoc"
+  ],
   "autoload": {
     "psr-4": {
       "JigDoc\\": "src/"
